@@ -1,0 +1,15 @@
+Visual Expense Breakdown (Vertical Bar Chart):
+---------------------------------------------
+           
+           
+           
+           
+           
+    *      
+    *         *
+    *         *
+    *         *
+    *         *
+  Needs     Wants
+  $440.00   $300.00
+(Total Expenses: $740.00)

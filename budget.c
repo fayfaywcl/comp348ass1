@@ -269,6 +269,8 @@ void visualExpenseBreakdown(Entry *entries, int entryCount) {
     // Initialize totals for needs, wants, and overall expenses
     float needsTotal = 0.0, wantsTotal = 0.0, totalExpenses = 0.0;
 
+    int maxHeight = 10;  // Max height of the chart (in lines)
+
     // Loop through all entries to calculate expense totals
     for (int i = 0; i < entryCount; i++) {
         // Only process entries of type "expense"
@@ -289,25 +291,48 @@ void visualExpenseBreakdown(Entry *entries, int entryCount) {
     printf("\nVisual Expense Breakdown (Bar Chart):\n");
     printf("--------------------------------------\n");
 
-    // Calculate number of bars for "Needs" and "Wants"
-    // Scale bars to a maximum width of 50 characters
-    // Bar chart => based on the ((subtypes/totalExpenses) *50)
-    int needsBars = (totalExpenses > 0) ? (int)((needsTotal / totalExpenses) * 50) : 0;
-    int wantsBars = (totalExpenses > 0) ? (int)((wantsTotal / totalExpenses) * 50) : 0;
+    // Calculate bar heights based on maxHeight
+    int needsHeight = (totalExpenses > 0) ? (int)((needsTotal / totalExpenses) * maxHeight) : 0;
+    int wantsHeight = (totalExpenses > 0) ? (int)((wantsTotal / totalExpenses) * maxHeight) : 0;
 
-    // Print "Needs" bar
-    printf("Needs : |");
-    for (int i = 0; i < needsBars; i++) printf("*"); // Print stars(*) proportional
-    printf(" ($%.2f)\n", needsTotal); // Show actual value
+    // Print the chart top-down
+    for (int row = maxHeight; row >= 1; row--) {
+        printf("  ");
+        printf("%s", (needsHeight >= row) ? "  *  " : "     ");
+        printf("%s", (wantsHeight >= row) ? "       *" : "    ");
+        printf("\n");
+    }
 
-    // Print "Wants" bar
-    printf("Wants : |");
-    for (int i = 0; i < wantsBars; i++) printf("*"); // Print stars(*) proportional
-    printf(" ($%.2f)\n", wantsTotal); // Show actual value
-
-    printf("(Total Expenses: $%.2f)\n", totalExpenses);// Show actual value of Total Expense
+    // Print category labels
+    printf("  Needs     Wants\n");
+    printf("  $%.2f   $%.2f\n", needsTotal, wantsTotal);
+    printf("(Total Expenses: $%.2f)\n", totalExpenses);
 
     printf("\n");
+
+
+    // Save to file (for bar chart) to expense_chart.txt
+    FILE *file = fopen("expense_chart.txt", "w");
+    if (!file) {
+        printf("Error writing expense_chart.txt!\n");
+        return;
+    }
+
+    fprintf(file, "Visual Expense Breakdown (Vertical Bar Chart):\n");
+    fprintf(file, "---------------------------------------------\n");
+
+    for (int row = maxHeight; row >= 1; row--) {
+        fprintf(file, "  ");
+        fprintf(file, "%s", (needsHeight >= row) ? "  *  " : "     ");
+        fprintf(file, "%s", (wantsHeight >= row) ? "       *" : "    ");
+        fprintf(file, "\n");
+    }
+
+    fprintf(file, "  Needs     Wants\n");
+    fprintf(file, "  $%.2f   $%.2f\n", needsTotal, wantsTotal);
+    fprintf(file, "(Total Expenses: $%.2f)\n", totalExpenses);
+
+    fclose(file);
 }
 
 // 9. Transaction Search Feature: 
