@@ -1,11 +1,17 @@
 // main.c
 #include <stdio.h>
 #include <stdlib.h>
+#include "main.h"
+#include "ordering.h"
 #include "budget.h"
+#include "data.h"
 
 
-int main() {
-    printf("Welcome");
+
+int main(int argCount , char **argPointers) {
+
+    printf("Welcome!\n"); //display the welcome message
+
 
     Entry *entries = NULL;
     
@@ -22,12 +28,15 @@ int main() {
     }
 
     // Load data from file
-    loadEntries(entries, &entryCount);
+    loadEntries(entries, &entryCount, argPointers[1]);
 
     do {
+        
         displayMenu();
         scanf("%d", &choice);
         getchar();  // Clear newline character
+
+        system("clear");  // Clear the screen 
 
         switch (choice) {
             case 1:
@@ -40,23 +49,41 @@ int main() {
                 sortEntries(entries, entryCount);
                 break;
             case 4:
-                addEntry(entries, &entryCount);
+                addEntry(&entries, &entryCount);
                 break;
             case 5:
                 modifyEntry(entries, entryCount);
                 break;
-            case 6: {
+            case 6: 
                 filterByMonth(entries, entryCount);
                 break;
-            }
+
             case 7:
-                printf("Goodbye and thanks for using our budget tracker app\n");
+                printf("Goodbye and thanks for using our budget tracker app!!!\n");
                 break;
+
+            case 8: 
+                visualExpenseBreakdown(entries,entryCount);
+                break;
+
+            case 9:
+                searchByAmount(entries, entryCount);
+                break;
+
+            case 10:
+                undoLastAction(&entries, &entryCount);
+                break; 
+
             default:
                 printf("Invalid choice. Try again.\n");
         }
+    
+        
 
-    } while (choice != 7);
+    } while (choice != 7); // Exit when the user selects option 7
+
+    // Write data to the file
+    saveEntries(entries,entryCount, argPointers[1]);
 
     free(entries);  // Free allocated memory
     
@@ -64,7 +91,8 @@ int main() {
 }
 
 void displayMenu() {
-    printf(" Budget Tracking System\n");
+    
+    printf("\nBudget Tracking System\n");
     printf("===========================\n");
     printf("1. Display all entries\n");
     printf("2. Expense Distribution\n");
@@ -73,5 +101,9 @@ void displayMenu() {
     printf("5. Modify Entry\n");
     printf("6. Filter by Month\n");
     printf("7. Exit\n");
-    printf("Choice: ");
+    printf("-------------------\n-Extra Credits Tasks-\n");
+    printf("8. Visual Expense Breakdown\n");
+    printf("9. Transaction Search Feature\n");
+    printf("10: Undo Last Action\n");
+    printf("\nChoice: ");
 }
