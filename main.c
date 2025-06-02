@@ -9,6 +9,7 @@
 
 
 int main(int argCount , char **argPointers) {
+    system("clear");  // Clear the screen 
 
     printf("Welcome!\n"); //display the welcome message
 
@@ -36,6 +37,7 @@ int main(int argCount , char **argPointers) {
         scanf("%d", &choice);
         getchar();  // Clear newline character
 
+        //the screen should always be cleared whenever the menu is (re)displayed
         system("clear");  // Clear the screen 
 
         switch (choice) {
