@@ -1,3 +1,16 @@
+//budget.c
+//(the code used to carry out the logic of the menu options)
+//displayAllEntries()=>1. Display all entries
+//expenseDistribution()=>2. Expense Distribution
+//3. Sort Entries => is in ordering.c for sorting method
+//addEntry()=> 4. Add Income/Expense Entry
+//modifyEntry()=> 5. Modify Entry
+//filterByMonth()=> 6. Filter by Month
+
+//visualExpenseBreakdown()=> 8. Visual Expense Breakdown
+//searchByAmount()=> 9. Transaction Search Feature
+//undoLastAction()=> 10. Undo Last Action
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,6 +30,8 @@ Undo undoData = {0};  // Initialize with no undo
 void displayAllEntries(Entry *entries, int entryCount) {
     printf("\nFinances Summary\n");
     printf("=================");
+
+    //All columns have column headers
     printf("\n%-5s %-12s %-10s %-10s %-15s %10s\n", "ID", "Date", "Type", "Category", "Description", "Amount");
     printf("---------------------------------------------------------------------\n");
     for (int i = 0; i < entryCount; i++) {
@@ -27,6 +42,8 @@ void displayAllEntries(Entry *entries, int entryCount) {
 }
 
 // 2. Expense Distribution
+// print total income, total expenses, expenses separated into needs 
+// and wants, and their share in expenses as well as total income, and the net balance
 void expenseDistribution(Entry *entries, int entryCount) {
     double totalIncome = 0.0, totalExpenses = 0.0;
     double needs = 0.0, wants = 0.0;
@@ -68,6 +85,7 @@ void expenseDistribution(Entry *entries, int entryCount) {
 // 3. Sort Entries => is in ordering.c for sorting method 
 
 // 4. Add Income/Expense Entry
+//allow a user to add an entry to the finances.
     //entriesPtr is a pointer to a pointer to an array of Entry structs.
     //count holds the current number of entries.
 void addEntry(Entry **entriesPtr, int *entryCountPtr) {
@@ -148,9 +166,10 @@ void addEntry(Entry **entriesPtr, int *entryCountPtr) {
 }
 
 //5. Modify Entry
+//update the amount for an entry,
 void modifyEntry(Entry *entries, int entryCount) {
 
-    // display the current contents, by using option 1 to Display All Entries.
+    // first display the current contents, by using option 1 to Display All Entries.
     displayAllEntries(entries, entryCount);
 
     int id;
@@ -192,15 +211,15 @@ void modifyEntry(Entry *entries, int entryCount) {
                 case 2:
                     
                     do {
-                    printf("Enter new amount: $");
-                    scanf("%f", &entries[i].amount);
-                    while ((getchar()) != '\n' && getchar() != EOF) ; // Clear input buffer
-                    
-                    //not be able to update an amount with a negative value
-                    if (entries[i].amount < 0) {
-                        printf("Error: Amount cannot be negative. Please enter a non-negative value.\n");
-                    }
-                } while (entries[i].amount < 0);
+                        printf("Enter new amount: $");
+                        scanf("%f", &entries[i].amount);
+                        while ((getchar()) != '\n' && getchar() != EOF) ; // Clear input buffer
+                        
+                        //not be able to update an amount with a negative value
+                        if (entries[i].amount < 0) {
+                            printf("Error: Amount cannot be negative. Please enter a non-negative value.\n");
+                        }
+                    } while (entries[i].amount < 0);
                     
 
                     break;
@@ -215,6 +234,7 @@ void modifyEntry(Entry *entries, int entryCount) {
     }
     
     printf("Entry with ID %d not found.\n", id); //If ID is invalid, it shows "not found".
+    // if are updating an entry and use an entry ID that doesn’t exist, the program should not crash.
 }
 
 //6. Filter by Month
@@ -254,7 +274,7 @@ void filterByMonth(Entry *entries, int entryCount) {
 
     // no entries matched
     if (!found) {
-        printf("No entries found for the specified year and month.\n");
+        printf("\nNo entries found for the specified year and month.\n");
     }
 
 }
@@ -297,21 +317,23 @@ void visualExpenseBreakdown(Entry *entries, int entryCount) {
 
     // Print the chart top-down
     for (int row = maxHeight; row >= 1; row--) {
-        printf("  ");
-        printf("%s", (needsHeight >= row) ? "  *  " : "     ");
-        printf("%s", (wantsHeight >= row) ? "       *" : "    ");
-        printf("\n");
+    int percentage = (int)(((float)row / maxHeight) * 100);  // Convert row height to percentage
+    printf("%3d%% ", percentage);  // Left column with percentage scale
+    printf("%s", (needsHeight >= row) ? "  *  " : "     ");
+    printf("%s", (wantsHeight >= row) ? "       *" : "    ");
+    printf("\n");
     }
 
+
     // Print category labels
-    printf("  Needs     Wants\n");
-    printf("  $%.2f   $%.2f\n", needsTotal, wantsTotal);
+    printf("     Needs     Wants\n");
+    printf("     $%.2f   $%.2f\n", needsTotal, wantsTotal);
     printf("(Total Expenses: $%.2f)\n", totalExpenses);
 
     printf("\n");
 
 
-    // Save to file (for bar chart) to expense_chart.txt
+    // Save to file (for bar chart) (expense_chart.txt)
     FILE *file = fopen("expense_chart.txt", "w");
     if (!file) {
         printf("Error writing expense_chart.txt!\n");
@@ -322,14 +344,15 @@ void visualExpenseBreakdown(Entry *entries, int entryCount) {
     fprintf(file, "---------------------------------------------\n");
 
     for (int row = maxHeight; row >= 1; row--) {
-        fprintf(file, "  ");
+        int percentage = (int)(((float)row / maxHeight) * 100);
+        fprintf(file, "%3d%% ", percentage);
         fprintf(file, "%s", (needsHeight >= row) ? "  *  " : "     ");
         fprintf(file, "%s", (wantsHeight >= row) ? "       *" : "    ");
         fprintf(file, "\n");
     }
 
-    fprintf(file, "  Needs     Wants\n");
-    fprintf(file, "  $%.2f   $%.2f\n", needsTotal, wantsTotal);
+    fprintf(file, "     Needs     Wants\n");
+    fprintf(file, "     $%.2f   $%.2f\n", needsTotal, wantsTotal);
     fprintf(file, "(Total Expenses: $%.2f)\n", totalExpenses);
 
     fclose(file);

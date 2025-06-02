@@ -1,4 +1,8 @@
 // data.c
+//(any code used to read the input file and extract the fields from each row)
+//loadEntries()
+//saveEntries()
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,7 +10,8 @@
 #include "data.h"
 
 #define MAX_LINE_LENGTH 200
-
+// buffer size for reading a line
+// reading each line up to 199 characters + null terminator
 
 // Load the entries from the input
 
@@ -18,14 +23,14 @@ void loadEntries(Entry *entries, int *entryCount, char filename[]) {
     if (file == NULL) {
         fprintf(stderr, "Could not open %s.\n", filename);
         *entryCount = 0;
-        return;
+        exit(EXIT_FAILURE);
     }
 
     char line[MAX_LINE_LENGTH];
     int count = 0;
 
     while (fgets(line, sizeof(line), file) != NULL) {
-        if (count >= MAX_LINE_LENGTH) break;
+        
 
         // Remove trailing newline character if present
         line[strcspn(line, "\n")] = 0; // Remove newline
@@ -52,7 +57,8 @@ void loadEntries(Entry *entries, int *entryCount, char filename[]) {
             exit(EXIT_FAILURE);// Exit the program with failure status
         }
 
-        // Check string lengths
+        // Check string lengths 
+        // that maximum possible lengths of all strings fields are no longer than 100 characters
         if (strlen(tokens[1]) >= StringsFields_SIZE ||
             strlen(tokens[2]) >= StringsFields_SIZE ||
             strlen(tokens[3]) >= StringsFields_SIZE ||
@@ -82,7 +88,7 @@ void saveEntries(Entry *entries, int entryCount, char filename[]) {
 
     if (file == NULL) {
         printf("Error: Could not open %s for writing.\n", filename);
-        return;
+        exit(EXIT_FAILURE);
     }
 
     for (int i = 0; i < entryCount; i++) {

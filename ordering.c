@@ -1,4 +1,9 @@
 //ordering.c
+//(any code related to sorting the entries)
+//void sortEntries()=> 3. Sort Entries
+
+//compare functions
+// int compareByID(),int compareByDate(),int compareByAmount(),int compareByDescription()
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -48,9 +53,9 @@ void sortEntries(Entry *entries, int entryCount) {
     scanf("%d", &sortChoice);
 
     switch (sortChoice) {
-        //qsort takes 
+        //qsort(1,2,3,4) takes 
         //(1) the array to be sorted, 
-        //(2) the numbers of elements in the array, 
+        //(2) the numbe rs of elements in the array, 
         //(3) the size (in bytes) of each element, and 
         //(4) the name of the comparison function. 
         
@@ -71,8 +76,8 @@ void sortEntries(Entry *entries, int entryCount) {
             printf("Entries sorted by description.\n");
             break;
         default:
-            printf("Invalid choice. Sorting by ID.\n");
-            qsort(entries, entryCount, sizeof(Entry), compareByID);
+            printf("Invalid choice.\n");
+            break;
     }
 
     // Display sorted entries , by using option 1 to Display All Entries.

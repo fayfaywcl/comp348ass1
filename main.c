@@ -1,4 +1,7 @@
 // main.c
+//(the main function and the basic GUI)
+//displayMenu()
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "main.h"
@@ -29,6 +32,7 @@ int main(int argCount , char **argPointers) {
     }
 
     // Load data from file
+    // argPointer[1] is for input the .txt file name 
     loadEntries(entries, &entryCount, argPointers[1]);
 
     do {
@@ -40,6 +44,8 @@ int main(int argCount , char **argPointers) {
         //the screen should always be cleared whenever the menu is (re)displayed
         system("clear");  // Clear the screen 
 
+        // assume a perfect user who will always enter 
+        // an appropriate type of input, for instance an integer for number input. 
         switch (choice) {
             case 1:
                 displayAllEntries(entries, entryCount);
