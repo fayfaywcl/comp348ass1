@@ -1,7 +1,7 @@
 # comp348ass1
 
 all 1.- 7. function (work)
-and extra creaits tasks in 8.- 10. for extra credits (also work)
+and extra credits tasks in 8.- 10. for extra credits (also work)
 
 8. => 1. Visual Expense Breakdown: Print a basic text-based bar chart (e.g., using * characters) 
 showing how income is distributed across different expense subtypes. 
