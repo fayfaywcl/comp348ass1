@@ -34,9 +34,8 @@ int main(int argCount , char **argPointers) {
     // Load data from file
     // argPointer[1] is for input the .txt file name 
     loadEntries(entries, &entryCount, argPointers[1]);
-
+    
     do {
-        
         displayMenu();
         scanf("%d", &choice);
         getchar();  // Clear newline character
