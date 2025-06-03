@@ -324,7 +324,7 @@ void visualExpenseBreakdown(Entry *entries, int entryCount) {
         int percentage = (int)(((float)row / maxHeight) * 100);  // Convert row height to percentage
         printf("%3d%% ", percentage);  // Left column with percentage scale
         printf("%s", (needsHeight >= row) ? "  *  " : "     ");
-        printf("%s", (wantsHeight >= row) ? "  *" : "     ");
+        printf("%s", (wantsHeight >= row) ? "     *" : "     ");
         printf("\n");
     }
 
@@ -357,7 +357,7 @@ void visualExpenseBreakdown(Entry *entries, int entryCount) {
         int percentage = (int)(((float)row / maxHeight) * 100);
         fprintf(file, "%3d%% ", percentage);
         fprintf(file, "%s", (needsHeight >= row) ? "  *  " : "     ");
-        fprintf(file, "%s", (wantsHeight >= row) ? "  *" : "     ");
+        fprintf(file, "%s", (wantsHeight >= row) ? "     *" : "     ");
         fprintf(file, "\n");
     }
 
