@@ -10,4 +10,4 @@ showing how income is distributed across different expense subtypes.
 
 10.=> 3. Undo Last Action: A basic undo feature to reverse the most recent addition or update
 
-For Visual Expense Breakdown(8.): it is printed (when clicked 8) in the Terminal and expense_chart.txt
+For Visual Expense Breakdown(8.): it is printed (when clicked 8) in the Terminal and updated in expense_chart.txt

@@ -286,17 +286,20 @@ void filterByMonth(Entry *entries, int entryCount) {
 //Print a basic text-based bar chart (e.g., using * characters) 
 //showing how "income"($) is distributed across different "expense" "subtypes".
 void visualExpenseBreakdown(Entry *entries, int entryCount) {
-    // Initialize totals for needs, wants, and overall expenses
-    float needsTotal = 0.0, wantsTotal = 0.0, totalExpenses = 0.0;
+    // Initialize totals for income, needs, wants, and overall expenses
+    float needsTotal = 0.0, wantsTotal = 0.0, totalExpenses = 0.0, totalIncome = 0.0;
 
-    int maxHeight = 10;  // Max height of the chart (in lines)
+    int maxHeight = 20;  // Max height of the chart 
 
-    // Loop through all entries to calculate expense totals
+    // Loop through all entries to calculate income and expense totals
     for (int i = 0; i < entryCount; i++) {
+        // Calculate total income
+        if (strcmp(entries[i].type, "income") == 0) {
+            totalIncome += entries[i].amount;
+        }
         // Only process entries of type "expense"
-        //strcmp(): is used to compare two strings
-        if (strcmp(entries[i].type, "expense") == 0) {
-            totalExpenses += entries[i].amount; // Add the amount($)to total expenses
+        else if (strcmp(entries[i].type, "expense") == 0) {
+            totalExpenses += entries[i].amount; // Add the amount($) to total expenses
 
             // Add amount to either needsTotal or wantsTotal based on category
             if (strcmp(entries[i].category, "Needs") == 0) {
@@ -307,31 +310,37 @@ void visualExpenseBreakdown(Entry *entries, int entryCount) {
         }
     }
 
-    // Print the bar chart
+    // Print the bar chart - showing how income is distributed across expense subtypes
     printf("\nVisual Expense Breakdown (Bar Chart):\n");
-    printf("--------------------------------------\n");
+    printf("(How Income is Distributed Across Expense Subtypes)\n");
+    printf("------------------------------------------------\n");
 
-    // Calculate bar heights based on maxHeight
-    int needsHeight = (totalExpenses > 0) ? (int)((needsTotal / totalExpenses) * maxHeight) : 0;
-    int wantsHeight = (totalExpenses > 0) ? (int)((wantsTotal / totalExpenses) * maxHeight) : 0;
+    // Calculate bar heights based on expense subtypes as percentage of income
+    int needsHeight = (totalIncome > 0) ? (int)((needsTotal / totalIncome) * maxHeight) : 0;
+    int wantsHeight = (totalIncome > 0) ? (int)((wantsTotal / totalIncome) * maxHeight) : 0;
 
     // Print the chart top-down
     for (int row = maxHeight; row >= 1; row--) {
-    int percentage = (int)(((float)row / maxHeight) * 100);  // Convert row height to percentage
-    printf("%3d%% ", percentage);  // Left column with percentage scale
-    printf("%s", (needsHeight >= row) ? "  *  " : "     ");
-    printf("%s", (wantsHeight >= row) ? "       *" : "    ");
-    printf("\n");
+        int percentage = (int)(((float)row / maxHeight) * 100);  // Convert row height to percentage
+        printf("%3d%% ", percentage);  // Left column with percentage scale
+        printf("%s", (needsHeight >= row) ? "  *  " : "     ");
+        printf("%s", (wantsHeight >= row) ? "  *" : "     ");
+        printf("\n");
     }
 
-
-    // Print category labels
-    printf("     Needs     Wants\n");
-    printf("     $%.2f   $%.2f\n", needsTotal, wantsTotal);
-    printf("(Total Expenses: $%.2f)\n", totalExpenses);
+    // Print category labels and amounts
+    printf("     Needs   Wants\n");
+    printf("    $%.2f $%.2f\n", needsTotal, wantsTotal);
+    
+    // Print percentages of income going to each expense subtype
+    printf("    (%.2f%%)  (%.2f%%)\n", 
+           (needsTotal/totalIncome)*100, 
+           (wantsTotal/totalIncome)*100);
+    printf("(Total Income: $%.2f, Total Expenses: $%.2f)\n", totalIncome, totalExpenses);
 
     printf("\n");
 
+    printf("\n");
 
     // Save to file (for bar chart) (expense_chart.txt)
     FILE *file = fopen("expense_chart.txt", "w");
@@ -341,19 +350,23 @@ void visualExpenseBreakdown(Entry *entries, int entryCount) {
     }
 
     fprintf(file, "Visual Expense Breakdown (Vertical Bar Chart):\n");
-    fprintf(file, "---------------------------------------------\n");
+    fprintf(file, "(How Income is Distributed Across Expense Subtypes)\n");
+    fprintf(file, "------------------------------------------------\n");
 
     for (int row = maxHeight; row >= 1; row--) {
         int percentage = (int)(((float)row / maxHeight) * 100);
         fprintf(file, "%3d%% ", percentage);
         fprintf(file, "%s", (needsHeight >= row) ? "  *  " : "     ");
-        fprintf(file, "%s", (wantsHeight >= row) ? "       *" : "    ");
+        fprintf(file, "%s", (wantsHeight >= row) ? "  *" : "     ");
         fprintf(file, "\n");
     }
 
-    fprintf(file, "     Needs     Wants\n");
-    fprintf(file, "     $%.2f   $%.2f\n", needsTotal, wantsTotal);
-    fprintf(file, "(Total Expenses: $%.2f)\n", totalExpenses);
+    fprintf(file, "     Needs   Wants\n");
+    fprintf(file, "    $%.2f $%.2f\n", needsTotal, wantsTotal);
+    fprintf(file, "    (%.2f%%)  (%.2f%%)\n", 
+           (needsTotal/totalIncome)*100, 
+           (wantsTotal/totalIncome)*100);
+    fprintf(file, "(Total Income: $%.2f, Total Expenses: $%.2f)\n", totalIncome, totalExpenses);
 
     fclose(file);
 }
