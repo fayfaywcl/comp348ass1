@@ -22,6 +22,6 @@ Visual Expense Breakdown (Vertical Bar Chart):
  10%           
   5%   *    *
      Needs   Wants
-    $440.00 $350.00
-    (9.95%)  (7.92%)
-(Total Income: $4420.00, Total Expenses: $790.00)
+    $440.00 $325.00
+    (9.95%)  (7.35%)
+(Total Income: $4420.00, Total Expenses: $765.00)
